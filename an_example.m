@@ -15,6 +15,7 @@ end
 % This data includes SST in [147-155E, 45-37S] in resolution of 0.25 from
 % 1982 to 2016.
 
+load('lon_and_lat');
 size(sst_full); %size of data
 datenum(2016,12,31)-datenum(1982,1,1)+1 % The temporal length is 35 years.
 
