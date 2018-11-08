@@ -6,7 +6,7 @@ We provide an example about applying **`m_mhw`** to real-world data. In this exa
 Loading data
 -------------
 
-Firstly, let’s load NOAA OI SST data (Reynolds et al., 2007). Due to the limitation of file size in Github, these data are stored in folder `data` for one year per file. We need to reconstruct these data into one combined dataset.
+Firstly, let’s load NOAA OI SST data (Reynolds et al., 2007). Due to the limitation of file size in Github, these data are stored in folder [data](https://github.com/ZijieZhaoMMHW/m_mhw1.0/tree/master/data) for one year per file. We need to reconstruct these data into one combined dataset.
 
 ```
 sst_full=NaN(32,32,datenum(2016,12,31)-datenum(1982,1,1)+1);
