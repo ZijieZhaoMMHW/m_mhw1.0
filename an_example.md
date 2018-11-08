@@ -22,6 +22,7 @@ The `sst_full` contains SST in [147-155E, 45-37S] in resolution of 0.25 from 198
 
 ```
 size(sst_full); %size of data
+load('lon_and_lat');
 datenum(2016,12,31)-datenum(1982,1,1)+1 % The temporal length is 35 years.
 load(‘sst_loc’);% also load lon location and lat location
 
