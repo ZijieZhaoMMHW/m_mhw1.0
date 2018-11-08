@@ -75,4 +75,4 @@ clim$thresh_clim_year[clim$t==as.Date('1999-10-28')]
 
 ```
 
-The thresholds calculated in R and MATLAB are slightly different since they follow different algorithms. It may induce few biaes for resultant MHW/MCS outputs but it does not impact states and trends of MHW/MCS in long temporal scale.
+The thresholds calculated in R and MATLAB are slightly different since they follow different algorithms. It may induce few bias for resultant MHW/MCS outputs but it does not impact states and trends of MHW/MCS in long temporal scale.
