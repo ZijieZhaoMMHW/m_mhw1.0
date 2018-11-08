@@ -138,6 +138,11 @@ Example
 
 We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.md) about how to use functions in **`m_mhw`** and how to apply them to real-world data. Its associated code could be found [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.m).
 
+Issues
+--------------------
+
+The results from this toolbox would be slightly different from outputs from Python and R modules. This is due to the fact that MATLAB follows different rules to calculate percentile thresholds. The number of detected events from this toolbox would be slightly less than that from Python and R. Please see a comparison.
+
 Contributing to **`m_mhw`**
 ----------
 
