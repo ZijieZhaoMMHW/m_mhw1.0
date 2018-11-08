@@ -136,7 +136,7 @@ The major output `MHW` contains all detected MHW/MCS events, characterized by 9 
 Example
 ----------
 
-We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.md) about how to use functions in **`m_mhw`** and how to apply them to real-world data. Its associated code could be found [here] (https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.m).
+We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.md) about how to use functions in **`m_mhw`** and how to apply them to real-world data. Its associated code could be found [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.m).
 
 Contributing to **`m_mhw`**
 ----------
