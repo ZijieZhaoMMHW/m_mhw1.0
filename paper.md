@@ -1,5 +1,5 @@
 ---
-title: 'A MATLAB toolbox to detect and analyze marine heatwaves'
+title: 'An MATLAB toolbox to detect and analyze marine heatwaves'
 tags:
 - MATLAB
 - heatwaves
