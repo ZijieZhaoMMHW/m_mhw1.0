@@ -146,7 +146,7 @@ The results from this toolbox would be slightly different from outputs from Pyth
 Contributing to **`m_mhw`**
 ----------
 
-To contribute to the package please follow the guidelines [here](https://github.com/ZijieZhao/see/blob/master/Contributing_to_mmhw.md).
+To contribute to the package please follow the guidelines [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/Contributing_to_mmhw.md).
 
 Please use this [link](https://github.com/ZijieZhaoMMHW/m_mhw1.0/issues) to report any bugs found.
 
