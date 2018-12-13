@@ -9,6 +9,8 @@ authors:
 - affiliation: "1, 2, 3, 4"
   name: Zijie Zhao
   orcid: 0000-0003-3403-878X
+- affiliation: "2, 3, 5"
+  name: Maxime Marin
 date: "8 November 2018"
 output: pdf_document
 bibliography: paper.bib
@@ -21,6 +23,8 @@ affiliations:
   name: Australian Research Council Centre of Excellence for Climate System Science, Hobart, Tasmania, Australia
 - index: 4
   name: College of Oceanic and Atmospheric Sciences, Ocean University of China, Qingdao, China
+- index: 5
+  name: CSIRO Oceans & Atmosphere, Indian Ocean Marine Research Centre, Crawley 6009, Western Australia, Australia
 
 ---
 
