@@ -38,12 +38,13 @@ In this section we detect MHWs and MCSs off eastern Tasmania based on definition
 % traditional definition of MHWs (Hobday et al. 2016). We detected MHWs
 % during 1993 to 2016 for climatologies and thresholds in 1982 to 2005.
 
-[MHW,mclim,m90,mhw_ts]=detect(sst_full,1982,2005,1982,1993,2016); %take about 30 seconds.
+[MHW,mclim,m90,mhw_ts]=detect(sst_full,datenum(1982,1,1):datenum(2016,12,31),datenum(1982,1,1),datenum(2005,12,31),datenum(1993,1,1),datenum(2016,12,31)); %take about 30 seconds.
 
 % Additionally, we also detect MCSs during 1982 to 2005 based on the same
 % climatologies. 
 
-[MCS,~,m10,mcs_ts]=detect(sst_full,1982,2005,1982,1993,2016,'Event','MCS','Threshold',0.1);
+[MCS,~,m10,mcs_ts]=detect(sst_full,datenum(1982,1,1):datenum(2016,12,31),datenum(1982,1,1),datenum(2005,12,31),datenum(1993,1,1),datenum(2016,12,31),'Event','MCS','Threshold',0.1);
+
 ```
 
 Let’s have a look at these two resultant data (`MHW` and `MCS`).
@@ -269,7 +270,7 @@ MHW_m=MHW_m(:,[3 4 5 7]);
 
 ```
 
-Determination of suitable groups of kmeans is an important step. Here we use a correlation - based method to determine a suitable number of clusters. As more nodes were included, the generated patterns were reconstructed into a dataset with the same size as the original data by duplicating each pattern based on its allocated temporal data; the correlations between these two datasets were then calculated. The final map size of the SOM was determined as that size at which the correlation tended to a constant.
+Determination of suitable groups of kmeans is an important step. Here we use a correlation - based method to determine a suitable number of clusters. As more nodes were included, the generated patterns were reconstructed into a dataset with the same size as the original data by duplicating each pattern based on its allocated temporal data; the correlations between these two datasets were then calculated. The final map size of the kmeans was determined as that size at which the correlation tended to a constant.
 
 ```
 
@@ -340,7 +341,7 @@ Then plot them using colormap. The proportions of events in each group are label
 
 ![Image text](https://github.com/ZijieZhao/see/blob/master/store_figure/codebook.png)
 
-From this plot, we could see that more than 70000 MHW events are classified into 9 groups by their associated metric. Each group exhibits distinct MHW metrics, e.g. few (1%) intense (large MaxInt and MeanInt) and long (large Duration and CumInt) MHWs tend to happen in Group 7.
+From this plot, we could see that more than 70000 MHW events are classified into 9 groups by their associated metric. Each group exhibits distinct MHW metrics, e.g. few (2%) intense (large MaxInt and MeanInt) and long (large Duration and CumInt) MHWs tend to happen in Group 5.
 
 Let's see their associated SST anomaly patterns.
 
@@ -364,7 +365,7 @@ end
 ```
 ![Image text](https://github.com/ZijieZhao/see/blob/master/store_figure/sst_9.png)
 
-It could be detected that the existence of MHWs in this region is always companied by significant oceanic characteristics. Firstly, MHWs tend to happen in the period when oceanic region off eastern Tasmania is anomalously warm. Additionally, distinct surface conditions exist during specified MHW groups, e.g. sea surface is extremely hot during MHWs in Group 7.
+It could be detected that the existence of MHWs in this region is always companied by significant oceanic characteristics. Firstly, MHWs tend to happen in the period when oceanic region off eastern Tasmania is anomalously warm. Additionally, distinct surface conditions exist during specified MHW groups, e.g. sea surface is extremely hot during MHWs in Group 5.
 
 More things....
 -------------
