@@ -25,12 +25,12 @@ datenum(2016,12,31)-datenum(1982,1,1)+1 % The temporal length is 35 years.
 % traditional definition of MHWs (Hobday et al. 2016). We detected MHWs
 % during 1993 to 2016 for climatologies and thresholds in 1982 to 2005.
 
-[MHW,mclim,m90,mhw_ts]=detect(sst_full,1982,2005,1982,1993,2016); %take about 30 seconds.
+[MHW,mclim,m90,mhw_ts]=detect(sst_full,datenum(1982,1,1):datenum(2016,12,31),datenum(1982,1,1),datenum(2005,12,31),datenum(1993,1,1),datenum(2016,12,31));; %take about 30 seconds.
 
 % Additionally, we also detect MCSs during 1982 to 2005 based on the same
 % climatologies. 
 
-[MCS,~,m10,mcs_ts]=detect(sst_full,1982,2005,1982,1993,2016,'Event','MCS','Threshold',0.1);
+[MCS,~,m10,mcs_ts]=detect(sst_full,datenum(1982,1,1):datenum(2016,12,31),datenum(1982,1,1),datenum(2005,12,31),datenum(1993,1,1),datenum(2016,12,31),'Event','MCS','Threshold',0.1);
 
 % Have a look of these two data.
 MHW(1:5,:);
