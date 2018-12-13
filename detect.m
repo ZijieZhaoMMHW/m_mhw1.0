@@ -142,7 +142,7 @@ elseif ahead_date<=0 && after_date>0;
 else
     temp_clim=temp_clim;
 end
-%temp_clim=temp(:,:,ClimTime>=cli_start & ClimTime<=cli_end);
+
 temp_mhw=temp(:,:,time>=mhw_start & time<=mhw_end);
 
 
@@ -173,84 +173,11 @@ m90(:,:,60) = mean(m90(:,:,[59 61]),3,'omitnan');
 mclim(:,:,60) = mean(mclim(:,:,[59 61]),3,'omitnan');
 
 
-
-%     date_here=date_unique(i,:);
-%     time_here=find(date_false(:,2)==date_here(1) & date_false(:,3)==date_here(2));
-%     time_collect=[];
-%     for j=-vWindowHalfWidth:1:vWindowHalfWidth;
-%         time_collect=[time_collect;time_here(:)+j];
-%     end
-%     %time_collect=time_collect(time_collect>0 & time_collect<=size(date_false,1));
-%     time_collect(time_collect<=0)=size(temp_false,3)+time_collect(time_collect<=0);
-%     time_collect(time_collect>size(date_false,1))=time_collect(time_collect>size(date_false,1))-size(temp_false,3);
-%     
-%     mclim(:,:,i)=mean(temp_false(:,:,time_collect),3,'omitnan');
-%     m90(:,:,i)=percentile(temp_false(:,:,time_collect),vThreshold,3);
-
 true_time = datevec(time);
 true_time = true_time(:,1:3);
 true_time(:,1) = 2012;
 time_doy = day(datetime(true_time),'dayofyear');
 
-
-
-
-
-
-% date_false=NaN((year(cli_end)-year(cli_start)+1)*366,3);
-% date_false(:,1)=sort(repmat((year(cli_start):year(cli_end))',366,1));
-% 
-% all_2_29=60:366:size(date_false,1);
-% time_doy = day(time,'dayofyear');
-% leap_year =  year(time(time_doy == 366));
-% 
-% date_false(~ismember(date_false(:,1),leap_year) & ismember([1:length(date_false)]',all_2_29),2)=2;
-% date_false(~ismember(date_false(:,1),leap_year) & ismember([1:length(date_false)]',all_2_29),3)=29;
-% 
-% temp_false = NaN(size(temp,1),size(temp,2),length(date_false));
-% temp_false(:,:,isnan(date_false(:,2))) = temp_clim;
-% ind = find(~isnan(date_false(:,2)));
-% temp_false(:,:,ind) = mean([temp_false(:,:,ind-1);temp_false(:,:,ind+1)]);
-% 
-% date_false(isnan(date_false(:,2)),:) = date_true;
-
-% year_full=cli_start:cli_end;
-% year_noleap=year_full((fix(year_full/400)==year_full/400 & fix(year_full/100)~=year_full/100)|(fix(year_full/100)~=year_full/100 & fix(year_full/4)~=year_full/4));
-% 
-% date_false(ismember((1:size(date_false,1))',all_2_29) & ismember(date_false(:,1),year_noleap),2)=2;
-% date_false(ismember((1:size(date_false,1))',all_2_29) & ismember(date_false(:,1),year_noleap),3)=29;
-% 
-% date_false(nansum(date_false(:,2:3),2)==0,:)=date_true;
-% 
-% temp_false=NaN(size(temp_clim,1),size(temp_clim,2),size(date_false,1));
-% 
-% temp_false(:,:,~(ismember((1:size(date_false,1))',all_2_29) & ismember(date_false(:,1),year_noleap)))=temp_clim;
-% 
-% loc_here=find(ismember((1:size(date_false,1))',all_2_29) & ismember(date_false(:,1),year_noleap));
-% 
-% temp_false(:,:,loc_here)=(temp_false(:,:,loc_here-1)+temp_false(:,:,loc_here+1))./2;
-% 
-
-% date_unique=unique(date_false(:,2:3),'rows');
-% 
-% 
-% mclim=NaN(size(temp,1),size(temp,2),366);
-% m90=NaN(size(temp,1),size(temp,2),366);
-% 
-% for i=1:366;
-%     date_here=date_unique(i,:);
-%     time_here=find(date_false(:,2)==date_here(1) & date_false(:,3)==date_here(2));
-%     time_collect=[];
-%     for j=-vWindowHalfWidth:1:vWindowHalfWidth;
-%         time_collect=[time_collect;time_here(:)+j];
-%     end
-%     %time_collect=time_collect(time_collect>0 & time_collect<=size(date_false,1));
-%     time_collect(time_collect<=0)=size(temp_false,3)+time_collect(time_collect<=0);
-%     time_collect(time_collect>size(date_false,1))=time_collect(time_collect>size(date_false,1))-size(temp_false,3);
-%     
-%     mclim(:,:,i)=nanmean(temp_false(:,:,time_collect),3);
-%     m90(:,:,i)=percentile(temp_false(:,:,time_collect),vThreshold,3);
-% end
 
 m90long=smoothdata(cat(3,m90,m90,m90),3,'movmean',vsmoothPercentileWidth);
 m90=m90long(:,:,367:367+365);
@@ -262,11 +189,6 @@ mclim=mclimlong(:,:,367:367+365);
 
 mbigadd=temp_mhw;
 
-% yy=unique(year(mhw_start:mhw_end));
-% noleapyear=yy((fix(yy/400)==yy/400&fix(yy/100)~=yy/100)|(fix(yy/100)~=yy/100&fix(yy/4)~=yy/4));
-% noleapyearindex=(noleapyear-year(mhw_start))*366+60;
-%indextocal=repmat(1:366,1,year(mhw_end)-year(mhw_start)+1);
-%indextocal(noleapyearindex)=[];
 date_mhw=datevec(mhw_start:mhw_end);
 date_mhw(:,1)=2000;
 indextocal = day(datetime(date_mhw),'dayofyear');
