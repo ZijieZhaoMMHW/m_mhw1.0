@@ -12,6 +12,11 @@ Installation
 
 The installation of this toolbox could be directly achieved by downloading this repositories and add its path in your MATLAB.
 
+Requirements
+-------------
+
+The MATLAB Statistics and Machine Learning Toolbox.
+
 Functions
 -------------
 
