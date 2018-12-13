@@ -11,6 +11,7 @@ authors:
   orcid: 0000-0003-3403-878X
 - affiliation: "2, 3, 5"
   name: Maxime Marin
+  orcid: 0000-0001-7209-4454
 date: "8 November 2018"
 output: pdf_document
 bibliography: paper.bib
