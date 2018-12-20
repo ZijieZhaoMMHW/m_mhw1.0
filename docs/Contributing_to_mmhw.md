@@ -11,7 +11,7 @@ Corrections to typos and grammatical errors may be made directly through the Git
 Filing an issue
 ----------------
 
-Should one want to propose a change or new feature, please file an issue through the GitHub interface. Bug reports specifically may be made [here](https://github.com/ZijieZhao/see/issues). When proposing a change/new feature, or reporting a bug, please illustrate the issue with a minimal reproducible example, including texts, codes and resultant outputs.
+Should one want to propose a change or new feature, please file an issue through the GitHub interface. Bug reports specifically may be made [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/issues). When proposing a change/new feature, or reporting a bug, please illustrate the issue with a minimal reproducible example, including texts, codes and resultant outputs.
 
 Code of Conduct
 ----------------
