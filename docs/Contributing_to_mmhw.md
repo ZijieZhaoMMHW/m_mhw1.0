@@ -16,7 +16,7 @@ Should one want to propose a change or new feature, please file an issue through
 Code of Conduct
 ----------------
 
-Please note that this project is released with a [Contributor Code of Conduct](https://github.com/ZijieZhao/see/blob/master/Code_of_Conduct.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/docs/Code_of_Conduct.md). By participating in this project you agree to abide by its terms.
 
 
 
