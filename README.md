@@ -141,17 +141,17 @@ The major output `MHW` contains all detected MHW/MCS events, characterized by 9 
 Example
 ----------
 
-We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.md) about how to use functions in **`m_mhw`** and how to apply them to real-world data. Its associated code could be found [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/an_example.m).
+We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/an_example.md) about how to use functions in **`m_mhw`** and how to apply them to real-world data. Its associated code could be found [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/an_example.m).
 
 Issues
 --------------------
 
-The results from this toolbox would be slightly different from outputs from Python and R modules. This is due to the fact that MATLAB follows different rules to calculate percentile thresholds. The number of detected events from this toolbox would be slightly less than that from Python and R. Please see a [comparison](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/compare_M_R.md).
+The results from this toolbox would be slightly different from outputs from Python and R modules. This is due to the fact that MATLAB follows different rules to calculate percentile thresholds. The number of detected events from this toolbox would be slightly less than that from Python and R. Please see a [comparison](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/compare_M_R.md).
 
 Contributing to **`m_mhw`**
 ----------
 
-To contribute to the package please follow the guidelines [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/Contributing_to_mmhw.md).
+To contribute to the package please follow the guidelines [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/docs/Contributing_to_mmhw.md).
 
 Please use this [link](https://github.com/ZijieZhaoMMHW/m_mhw1.0/issues) to report any bugs found.
 
