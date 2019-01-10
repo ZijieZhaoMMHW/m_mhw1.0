@@ -224,7 +224,7 @@ Maxime Marin
 
 CSIRO Oceans & Atmosphere, Indian Ocean Marine Research Centre
 
-, Crawley 6009, Western Australia, Australia
+Crawley 6009, Western Australia, Australia
 
 E-mail: <Maxime.Marin@csiro.au> 
 
