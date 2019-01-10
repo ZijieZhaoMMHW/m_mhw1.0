@@ -95,7 +95,7 @@ ans =
      0
 ```
 
-Threshold are absolutely the same. So it could be caused by the fact that these two programming language use two different functions to calculate the percentile threshold.
+Threshold are absolutely not the same. So it could be caused by the fact that these two programming language use two different functions to calculate the percentile threshold.
 
 Way to detect MHWs
 -------------
