@@ -126,25 +126,28 @@ EventNames = {'MHW','MCS'};
 vEvent = internal.stats.getParamVal(vEvent,EventNames,...
     '''Event''');
 
+%%  "What if cli_start-window or cli_end+window exceeds the time range of data"
+
 ahead_date=time(1)-(cli_start-vWindowHalfWidth);
 after_date=cli_end+vWindowHalfWidth-time(end);
 temp_clim=ClimTemp(:,:,ClimTime>=cli_start-vWindowHalfWidth & ClimTime<=cli_end+vWindowHalfWidth);
 
-if ahead_date>0 && after_date>0;
+if ahead_date>0 && after_date>0
     temp_clim=cat(3,NaN(size(temp_clim,1),size(temp_clim,2),ahead_date), ...
     temp_clim,NaN(size(temp_clim,1),size(temp_clim,2),after_date));
-elseif ahead_date>0 && after_date<=0;
+elseif ahead_date>0 && after_date<=0
     temp_clim=cat(3,NaN(size(temp_clim,1),size(temp_clim,2),ahead_date), ...
     temp_clim);
-elseif ahead_date<=0 && after_date>0;
+elseif ahead_date<=0 && after_date>0
         temp_clim=cat(3, ...
             temp_clim,NaN(size(temp_clim,1),size(temp_clim,2),after_date));
 else
-    temp_clim=temp_clim;
+    
 end
 
 temp_mhw=temp(:,:,time>=mhw_start & time<=mhw_end);
 
+%% Calculating climatology and thresholds
 
 date_true=datevec(cli_start-vWindowHalfWidth:cli_end+vWindowHalfWidth);
 date_true=date_true(:,1:3);
@@ -160,7 +163,7 @@ m90=NaN(size(temp,1),size(temp,2),366);
 
 for i=1:366
     if i == 60
-        ;
+        
     else
         ind_fake=ind;
         ind_fake(fake_doy==i & ~ismember(datenum(date_true),cli_start:cli_end))=nan;
@@ -168,22 +171,18 @@ for i=1:366
     m90(:,:,i) = quantile(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),vThreshold,3);
     mclim(:,:,i) = mean(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3,'omitnan');
     end
-end   
+end
+% Dealing with Feb29
 m90(:,:,60) = mean(m90(:,:,[59 61]),3,'omitnan');
 mclim(:,:,60) = mean(mclim(:,:,[59 61]),3,'omitnan');
 
-
-true_time = datevec(time);
-true_time = true_time(:,1:3);
-true_time(:,1) = 2012;
-time_doy = day(datetime(true_time),'dayofyear');
-
+% Does running averages of threshold and clim..
 
 m90long=smoothdata(cat(3,m90,m90,m90),3,'movmean',vsmoothPercentileWidth);
 m90=m90long(:,:,367:367+365);
 mclimlong=smoothdata(cat(3,mclim,mclim,mclim),3,'movmean',vsmoothPercentileWidth);
 mclim=mclimlong(:,:,367:367+365);
-% does running averages of threshold and clim..
+
 
 [x_size,y_size]=deal(size(m90,1),size(m90,2));
 
@@ -194,12 +193,10 @@ date_mhw(:,1)=2000;
 indextocal = day(datetime(date_mhw),'dayofyear');
 
 ts=str2num(datestr(mhw_start:mhw_end,'YYYYmmdd'));
-mhw_ts=zeros(x_size,y_size,length(ts));
 
 mhw_ts=zeros(x_size,y_size,length(ts));
 
-maysum=[];
-maysumlo=[];
+
 mhwstart=[];
 mhwend=[];
 mduration=[];
@@ -207,11 +204,10 @@ mhwint_max=[];
 mhwint_mean=[];
 mhwint_var=[];
 mhwint_cum=[];
-mhw_on_rate=[];
-mhw_end_rate=[];
-thenames={'mhw_start','mhw_end','mhw_duration','mhw_max','mhw_mean','mhw_var','mhw_cum'};
 
 MHW=[];
+
+%% Detecting MHW/MCS in each grid
 
 switch vEvent
     case 'MHW'
@@ -221,7 +217,7 @@ switch vEvent
                 
                 mhw_ts(i,j,isnan(squeeze(mbigadd(i,j,:))))=nan;
                 
-                if sum(isnan(squeeze(mbigadd(i,j,:))))~=size(mbigadd,3);
+                if sum(isnan(squeeze(mbigadd(i,j,:))))~=size(mbigadd,3)
                     
                     maysum=zeros(size(mbigadd,3),1);
                     
@@ -230,7 +226,7 @@ switch vEvent
                     trigger=0;
                     potential_event=[];
                     
-                    for n=1:size(maysum,1);
+                    for n=1:size(maysum,1)
                         if trigger==0 && maysum(n)==1
                             start_here=n;
                             trigger=1;
@@ -238,7 +234,7 @@ switch vEvent
                             end_here=n-1;
                             trigger=0;
                             potential_event=[potential_event;[start_here end_here]];
-                        elseif n==size(maysum,1) && trigger==1 && maysum(n)==1;
+                        elseif n==size(maysum,1) && trigger==1 && maysum(n)==1
                             trigger=0;
                             end_here=n;
                             potential_event=[potential_event;[start_here end_here]];
@@ -320,7 +316,7 @@ switch vEvent
                     trigger=0;
                     potential_event=[];
                     
-                    for n=1:size(maysum,1);
+                    for n=1:size(maysum,1)
                         if trigger==0 && maysum(n)==1
                             start_here=n;
                             trigger=1;
@@ -328,7 +324,7 @@ switch vEvent
                             end_here=n-1;
                             trigger=0;
                             potential_event=[potential_event;[start_here end_here]];
-                        elseif n==size(maysum,1) && trigger==1 && maysum(n)==1;
+                        elseif n==size(maysum,1) && trigger==1 && maysum(n)==1
                             trigger=0;
                             end_here=n;
                             potential_event=[potential_event;[start_here end_here]];
@@ -343,7 +339,7 @@ switch vEvent
                             
                             gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
                             
-                            while min(gaps)<=vmaxGap;
+                            while min(gaps)<=vmaxGap
 %                                  potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
 %                                  potential_event(find(gaps<=vmaxGap)+1,:)=[];
 %                                  gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
@@ -355,7 +351,7 @@ switch vEvent
                                  gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
                             end
                             
-                            for le=1:size(potential_event,1);
+                            for le=1:size(potential_event,1)
                                 event_here=potential_event(le,:);
                                 endtime=ts(event_here(2));
                                 starttime=ts(event_here(1));
@@ -364,7 +360,7 @@ switch vEvent
                                 manom=mrow-mcl;
                                 mhw_ts(i,j,event_here(1):event_here(2))=manom;
                                 
-                                [maxanom,locanom]=nanmin(squeeze(manom));
+                                [maxanom,~]=nanmin(squeeze(manom));
                                 mhwint_max=[mhwint_max;...
                                     maxanom];
                                 mhwint_mean=[mhwint_mean;...
@@ -400,4 +396,5 @@ end
 
 MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),...
     'variablenames',{'mhw_onset','mhw_end','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
+
 
