@@ -15,7 +15,7 @@ The installation of this toolbox could be directly achieved by downloading this 
 Requirements
 -------------
 
-The MATLAB Statistics and Machine Learning Toolbox.
+The MATLAB Statistics and Machine Learning Toolbox. [m_map](https://www.eoas.ubc.ca/~rich/map.html) is recommended for running example.
 
 Functions
 -------------
@@ -49,8 +49,49 @@ Functions
 
 Additionally, this toolbox also provides sea surface temperature off eastern Tasmania [147-155E, 45-37S] during 1982-2015, extracted from NOAA OI SST V2 (Reynolds et al., 2007).
 
-Outputs
+Inputs and outputs
 --------------------
+
+The core function `detect` need some inputs:
+
+<table>
+<colgroup>
+<col width="17%" />
+<col width="82%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>temp</code></td>
+<td>A 3D matrix containing temperature data. </td>
+</tr>
+<tr class="even">
+<td><code>time</code></td>
+<td>A numeric vector indicating the time corresponding to temp in the format of <code>datenum()<code>. </td>
+</tr>
+<tr class="odd">
+<td><code>cli_start</code></td>
+<td>A numeric value indicating the starting date for calculating climatology in the format of <code>datenum()<code>. </td>
+</tr>
+<tr class=“even”>
+<td><code>cli_end</code></td>
+<td>A numeric value indicating the ending date for calculating climatology in the format of <code>datenum()<code>.</td>
+</tr>
+<tr class=“odd”>
+<td><code>mhw_start</code></td>
+<td>A numeric value indicating the starting date for detection of MHW in the format of <code>datenum()<code>.</td>
+</tr>
+<tr class=“even”>
+<td><code>mhw_end</code></td>
+<td>A numeric value indicating the ending date for detection of MHW in the format of <code>datenum()<code>.</td>
+</tr>
+</tbody>
+</table>
 
 The core function `detect` would return four outputs, which are `MHW`, `mclim`, `m90` and `mhw_ts`. Their descriptions are summarized in following table. 
 
@@ -80,7 +121,7 @@ The core function `detect` would return four outputs, which are `MHW`, `mclim`, 
 </tr>
 <tr class=“even”>
 <td><code>mhw_ts</code></td>
-<td>A 3D numeric matrix in size of (x,y,(datenum(MHW_end,1,1)-datenum(MHW_start)+1)), containing daily MHW/MCS intensity. 0 in this variable indicates that corresponding day is not in a MHW/MCS event and NaN indicates missing value or lands. </td>
+<td>A 3D numeric matrix in size of (x,y,(datenum(MHW_end)-datenum(MHW_start)+1)), containing daily MHW/MCS intensity. 0 in this variable indicates that corresponding day is not in a MHW/MCS event and NaN indicates missing value or lands. </td>
 </tr>
 </tbody>
 </table>
