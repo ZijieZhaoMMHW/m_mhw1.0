@@ -1,7 +1,8 @@
 Comparing Outputs from **`m_mhw`** and Python module.
 ==================================================================
 
-Here we provide a comparison between outputs from **`m_mhw`** and [**`marineHeatwaves.py`**](https://github.com/ecjoliver/marineHeatWaves/blob/master/marineHeatWaves.py). To simplify the testing process, we choose the `sst_full(1,2)` as the input dataset. 
+Here we provide a comparison between outputs from **`m_mhw`** and [**`marineHeatwaves.py`**](https://github.com/ecjoliver/marineHeatWaves/blob/master/marineHeatWaves.py).Its associated code could be found in the same folder. 
+To simplify the testing process, we choose the `sst_full(1,2)` as the input dataset. 
 
 ```
 sst_full=NaN(32,32,datenum(2016,12,31)-datenum(1982,1,1)+1);
@@ -22,6 +23,7 @@ We firstly write `sst_1_2` into a csv file. This is to make sure that MATLAB and
 csvwrite('sst_1_2.csv',[1;round(sst_1_2(:),2)]);
 % read it again to make sure MATLAB and Python get data from the same file
 sst_1_2=csvread('sst_1_2.csv');
+sst_1_2=sst_1_2(2:end);
 % detecting MHW using MATLAB
 [MHW,mclim,m90,mhw_ts]=detect(reshape(sst_1_2,1,1,length(sst_1_2)),datenum(1982,1,1):datenum(2016,12,31),datenum(1982,1,1),datenum(2005,12,31),datenum(1982,1,1),datenum(2016,12,31));
 
