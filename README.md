@@ -179,6 +179,8 @@ The major output `MHW` contains all detected MHW/MCS events, characterized by 9 
 </tbody>
 </table>
 
+For information of other functions, please see `help` text via MATLAB. For practical tutorial and example, please see following contents.
+
 Example
 ----------
 
