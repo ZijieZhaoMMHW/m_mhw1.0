@@ -192,18 +192,12 @@ date_mhw=datevec(mhw_start:mhw_end);
 date_mhw(:,1)=2000;
 indextocal = day(datetime(date_mhw),'dayofyear');
 
-ts=str2num(datestr(mhw_start:mhw_end,'YYYYmmdd'));
+ts=str2double(string(datestr(mhw_start:mhw_end,'YYYYmmdd')));
 
 mhw_ts=zeros(x_size,y_size,length(ts));
 
 
-mhwstart=[];
-mhwend=[];
-mduration=[];
-mhwint_max=[];
-mhwint_mean=[];
-mhwint_var=[];
-mhwint_cum=[];
+
 
 MHW=[];
 
@@ -241,27 +235,35 @@ switch vEvent
                         end
                     end
                     
-                    if ~isempty(potential_event);
+                    if ~isempty(potential_event)
                         
                         potential_event=potential_event((potential_event(:,2)-potential_event(:,1)+1)>=vminDuration,:);
                         
-                        if ~isempty(potential_event);
+                        if ~isempty(potential_event)
                             
                             gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
                             
-                            while min(gaps)<=vmaxGap;
-%                                  potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
-%                                  potential_event(find(gaps<=vmaxGap)+1,:)=[];
-%                                  gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
-                                 
-                                 potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
-                                 loc_should_del=(find(gaps<=vmaxGap)+1);
-                                 loc_should_del=loc_should_del(~ismember(loc_should_del,find(gaps<=vmaxGap)));
-                                 potential_event(loc_should_del,:)=[];
-                                 gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
+                            while min(gaps)<=vmaxGap
+                                %                                  potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
+                                %                                  potential_event(find(gaps<=vmaxGap)+1,:)=[];
+                                %                                  gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
+                                
+                                potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
+                                loc_should_del=(find(gaps<=vmaxGap)+1);
+                                loc_should_del=loc_should_del(~ismember(loc_should_del,find(gaps<=vmaxGap)));
+                                potential_event(loc_should_del,:)=[];
+                                gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
                             end
                             
-                            for le=1:size(potential_event,1);
+                            mhwstart=NaN(size(potential_event,1),1);
+                            mhwend=NaN(size(potential_event,1),1);
+                            mduration=NaN(size(potential_event,1),1);
+                            mhwint_max=NaN(size(potential_event,1),1);
+                            mhwint_mean=NaN(size(potential_event,1),1);
+                            mhwint_var=NaN(size(potential_event,1),1);
+                            mhwint_cum=NaN(size(potential_event,1),1);
+                            
+                            for le=1:size(potential_event,1)
                                 event_here=potential_event(le,:);
                                 endtime=ts(event_here(2));
                                 starttime=ts(event_here(1));
@@ -270,33 +272,28 @@ switch vEvent
                                 manom=mrow-mcl;
                                 mhw_ts(i,j,event_here(1):event_here(2))=manom;
                                 
-                                [maxanom,locanom]=nanmax(squeeze(manom));
-                                mhwint_max=[mhwint_max;...
-                                    maxanom];
-                                mhwint_mean=[mhwint_mean;...
-                                    mean(manom)];
-                                mhwint_var=[mhwint_var;...
-                                    std(manom)];
-                                mhwint_cum=[mhwint_cum;...
-                                    sum(manom)];
-                                mhwstart=[mhwstart;starttime];
-                                mhwend=[mhwend;endtime];
-                                mduration=[mduration;event_here(2)-event_here(1)+1];
+                                [maxanom,~]=nanmax(squeeze(manom));
+                                
+                                mhwint_max(le)=...
+                                    maxanom;
+                                mhwint_mean(le)=...
+                                    mean(manom);
+                                mhwint_var(le)=...
+                                    std(manom);
+                                mhwint_cum(le)=...
+                                    sum(manom);
+                                mhwstart(le)=starttime;
+                                mhwend(le)=endtime;
+                                mduration(le)=event_here(2)-event_here(1)+1;
                             end
-                             MHW=[MHW;[mhwstart mhwend mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
+                            MHW=[MHW;[mhwstart mhwend mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
                         end
                     end
                 end
                 
-               
                 
-                mhwstart=[];
-                mhwend=[];
-                mduration=[];
-                mhwint_max=[];
-                mhwint_mean=[];
-                mhwint_var=[];
-                mhwint_cum=[];
+                
+                
             end
         end
         
@@ -307,7 +304,7 @@ switch vEvent
                 
                 mhw_ts(i,j,isnan(squeeze(mbigadd(i,j,:))))=nan;
                 
-                if sum(isnan(squeeze(mbigadd(i,j,:))))~=size(mbigadd,3);
+                if sum(isnan(squeeze(mbigadd(i,j,:))))~=size(mbigadd,3)
                     
                     maysum=zeros(size(mbigadd,3),1);
                     
@@ -331,25 +328,33 @@ switch vEvent
                         end
                     end
                     
-                    if ~isempty(potential_event);
+                    if ~isempty(potential_event)
                         
                         potential_event=potential_event((potential_event(:,2)-potential_event(:,1)+1)>=vminDuration,:);
                         
-                        if ~isempty(potential_event);
+                        if ~isempty(potential_event)
                             
                             gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
                             
                             while min(gaps)<=vmaxGap
-%                                  potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
-%                                  potential_event(find(gaps<=vmaxGap)+1,:)=[];
-%                                  gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
-                                 
-                                 potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
-                                 loc_should_del=(find(gaps<=vmaxGap)+1);
-                                 loc_should_del=loc_should_del(~ismember(loc_should_del,find(gaps<=vmaxGap)));
-                                 potential_event(loc_should_del,:)=[];
-                                 gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
+                                %                                  potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
+                                %                                  potential_event(find(gaps<=vmaxGap)+1,:)=[];
+                                %                                  gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
+                                
+                                potential_event(find(gaps<=vmaxGap),2)=potential_event(find(gaps<=vmaxGap)+1,2);
+                                loc_should_del=(find(gaps<=vmaxGap)+1);
+                                loc_should_del=loc_should_del(~ismember(loc_should_del,find(gaps<=vmaxGap)));
+                                potential_event(loc_should_del,:)=[];
+                                gaps=(potential_event(2:end,1) - potential_event(1:(end-1),2) - 1);
                             end
+                            
+                            mhwstart=NaN(size(potential_event,1),1);
+                            mhwend=NaN(size(potential_event,1),1);
+                            mduration=NaN(size(potential_event,1),1);
+                            mhwint_max=NaN(size(potential_event,1),1);
+                            mhwint_mean=NaN(size(potential_event,1),1);
+                            mhwint_var=NaN(size(potential_event,1),1);
+                            mhwint_cum=NaN(size(potential_event,1),1);
                             
                             for le=1:size(potential_event,1)
                                 event_here=potential_event(le,:);
@@ -361,20 +366,21 @@ switch vEvent
                                 mhw_ts(i,j,event_here(1):event_here(2))=manom;
                                 
                                 [maxanom,~]=nanmin(squeeze(manom));
-                                mhwint_max=[mhwint_max;...
-                                    maxanom];
-                                mhwint_mean=[mhwint_mean;...
-                                    mean(manom)];
-                                mhwint_var=[mhwint_var;...
-                                    std(manom)];
-                                mhwint_cum=[mhwint_cum;...
-                                    sum(manom)];
-                                mhwstart=[mhwstart;starttime];
-                                mhwend=[mhwend;endtime];
-                                mduration=[mduration;event_here(2)-event_here(1)+1];
+                                
+                                mhwint_max(le)=...
+                                    maxanom;
+                                mhwint_mean(le)=...
+                                    mean(manom);
+                                mhwint_var(le)=...
+                                    std(manom);
+                                mhwint_cum(le)=...
+                                    sum(manom);
+                                mhwstart(le)=starttime;
+                                mhwend(le)=endtime;
+                                mduration(le)=event_here(2)-event_here(1)+1;
                             end
                             
-                             MHW=[MHW;[mhwstart mhwend mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
+                            MHW=[MHW;[mhwstart mhwend mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
                             
                         end
                     end
@@ -383,18 +389,13 @@ switch vEvent
                 
                 
                 
-                mhwstart=[];
-                mhwend=[];
-                mduration=[];
-                mhwint_max=[];
-                mhwint_mean=[];
-                mhwint_var=[];
-                mhwint_cum=[];
+                
             end
         end
 end
 
 MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),...
     'variablenames',{'mhw_onset','mhw_end','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
+
 
 
