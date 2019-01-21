@@ -1,6 +1,8 @@
 m_mhw
 ==================================================================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/686ad8251142474c85676a1c8492947d)](https://app.codacy.com/app/ZijieZhaoMMHW/m_mhw1.0?utm_source=github.com&utm_medium=referral&utm_content=ZijieZhaoMMHW/m_mhw1.0&utm_campaign=Badge_Grade_Settings)
+
 The **`m_mhw`** toolbox is an matlab - based tool designed to detect and analyse spatial marine heatwaves (MHWs). Previously, approaches to detecting and analysing MHW time series have been applied in python (https://github.com/ecjoliver/marineHeatWaves, written by Eric C. J. Oliver) and R (Schlegel and Smit, 2018). 
 
 The **`m_mhw`** toolbox is designed 1) to determine spatial MHWs according to the definition provided in Hobday et al. (2016) and marine cold spells (MCSs) introduced in Schlegel et al. (2017); 2) to visualize MHW/MCS event in a particular location during a period; 3) to explore the mean states and trends of MHW metrics, such as what have done in Oliver et al. (2018). 
