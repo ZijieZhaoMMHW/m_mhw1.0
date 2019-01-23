@@ -191,7 +191,7 @@ We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/te
 Issues
 --------------------
 
-The results from this toolbox would be slightly different from outputs from Python and R modules. This is due to the fact that MATLAB follows different rules to calculate percentile thresholds. The number of detected events from this toolbox would be slightly less than that from Python and R. Please see a [comparison](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/compare_M_R.md).
+The results from this toolbox would be slightly different from outputs from Python and R modules. This is due to the fact that MATLAB follows different rules to calculate percentile thresholds. The number of detected events from this toolbox would be slightly less than that from Python and R. Please see a [comparison](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/compare_M_R.md). If you would like to get the same outputs as python, please set the optional input `'percentile'` as `'python'` (default is `'matlab'`).
 
 Contributing to **`m_mhw`**
 ----------
