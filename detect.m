@@ -72,6 +72,9 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %   and thresholds.
 %
 %   'ClimTime' - A vector of datenum() corresponding to ClimTemp.
+%   
+%   'percentile' - Default is 'matlab'. Indicating the way to calculate
+%   percentile, using either 'matlab way' or 'python way'.
 %
 %  Output Arguments
 %   
@@ -107,8 +110,8 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 % ClimTime = time;
 % 
 paramNames = {'Event','Threshold','WindowHalfWidth','smoothPercentileWidth','minDuration',...
-    'maxGap','ClimTemp','ClimTime'};
-defaults   = {'MHW',0.9,5,31,5,2,temp,time};
+    'maxGap','ClimTemp','ClimTime','percentile'};
+defaults   = {'MHW',0.9,5,31,5,2,temp,time,'matlab'};
 % 
 % varargin = reshape(varargin,2,length(varargin)/2);
 % 
@@ -119,12 +122,15 @@ defaults   = {'MHW',0.9,5,31,5,2,temp,time};
 % end
 
 
-[vEvent, vThreshold,vWindowHalfWidth,vsmoothPercentileWidth,vminDuration,vmaxGap,ClimTemp,ClimTime]...
+[vEvent, vThreshold,vWindowHalfWidth,vsmoothPercentileWidth,vminDuration,vmaxGap,ClimTemp,ClimTime,vpercentile]...
     = internal.stats.parseArgs(paramNames, defaults, varargin{:});
 
 EventNames = {'MHW','MCS'};
 vEvent = internal.stats.getParamVal(vEvent,EventNames,...
     '''Event''');
+PercentileNames={'matlab','python'};
+vpercentile=internal.stats.getParamVal(vpercentile,PercentileNames,...
+    '''matlab''');
 
 %%  "What if cli_start-window or cli_end+window exceeds the time range of data"
 
@@ -167,9 +173,18 @@ for i=1:366
     else
         ind_fake=ind;
         ind_fake(fake_doy==i & ~ismember(datenum(date_true),cli_start:cli_end))=nan;
-        
-    m90(:,:,i) = quantile(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),vThreshold,3);
-    mclim(:,:,i) = mean(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3,'omitnan');
+    data_thre=num2cell(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3);
+    switch vpercentile
+        case 'matlab'
+            m90(:,:,i) = quantile(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),vThreshold,3);
+            mclim(:,:,i) = mean(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3,'omitnan');
+            
+        case 'python'
+            
+            m90(:,:,i) = cellfun(@percentile, data_thre,repmat({vThreshold},size(temp,1),size(temp,2)));
+            mclim(:,:,i) = mean(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3,'omitnan');
+    end
+    
     end
 end
 % Dealing with Feb29
@@ -397,5 +412,11 @@ end
 MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),...
     'variablenames',{'mhw_onset','mhw_end','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
 
-
-
+function p=percentile(data,thre)
+if nansum(isnan(data))~=length(data)
+    data=data(~isnan(data));
+    pos=1+(length(data)-1)*thre;
+    p=interp1((1:length(data))',sort(data(:)),pos);
+else
+    p=nan;
+end
