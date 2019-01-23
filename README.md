@@ -46,6 +46,10 @@ Functions
 <td><code>mean_and_trend()</code></td>
 <td>The function to calculate spatial mean states and annual trends of MHW/MCS properties. </td>
 </tr>
+<tr class="even">
+<td><code>composites()</code></td>
+<td>The function to calculate composites for a particular dataset across a particular index. </td>
+</tr>
 </tbody>
 </table>
 
