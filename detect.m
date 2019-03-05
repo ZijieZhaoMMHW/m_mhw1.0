@@ -418,8 +418,13 @@ switch vEvent
         end
 end
 
-MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),...
-    'variablenames',{'mhw_onset','mhw_end','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
+if ~isempty(MHW)
+    MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),...
+        'variablenames',{'mhw_onset','mhw_end','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
+else
+    disp('No MHWs detected');
+end
+    
 
 function p=percentile(data,thre)
 if nansum(isnan(squeeze(data)))~=length(data)% added squeeze to work with singleton dimensions
