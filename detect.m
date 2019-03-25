@@ -216,7 +216,7 @@ date_mhw=datevec(mhw_start:mhw_end);
 date_mhw(:,1)=2000;
 indextocal = day(datetime(date_mhw),'dayofyear');
 
-ts=str2double(string(datestr(mhw_start:mhw_end,'YYYYmmdd')));
+ts=mhw_start:mhw_end;
 
 mhw_ts=zeros(x_size,y_size,length(ts));
 
@@ -427,7 +427,7 @@ end
     
 
 function p=percentile(data,thre)
-if nansum(isnan(squeeze(data)))~=length(data)% added squeeze to work with singleton dimensions
+if sum(isnan(squeeze(data)),'omitnan')~=length(data)% added squeeze to work with singleton dimensions
     data=data(~isnan(data));% getting rid of NaNs will overestimate the threshold suggest changing it to the median
     % Also, if for a reason there is a grid point in the dataset with only
     % NaNs, this will create an error
