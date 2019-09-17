@@ -38,16 +38,16 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %   cli_start - A numeric value in format of datennum(yyyy,mm,dd), indicating the start date for the period
 %   across which the spatial climatology and threshold are calculated. 
 %
-%   cli_end - A numeric value in format of datennum(yyyy,mm,dd) indicating the end year for the period across
+%   cli_end - A numeric value in format of datennum(yyyy,mm,dd) indicating the end date for the period across
 %   which the spatial climatology and threshold are calculated. 
 %
-%   data_start - A numeric value in format of datennum(yyyy,mm,dd) indicating the start year of your input
+%   data_start - A numeric value in format of datennum(yyyy,mm,dd) indicating the start date of your input
 %   data TEMP.
 %
-%   mhw_start - A numeric value in format of datennum(yyyy,mm,dd) indicating the start year for the period
+%   mhw_start - A numeric value in format of datennum(yyyy,mm,dd) indicating the start date for the period
 %   across which MHW/MCS events are detected. 
 %
-%   mhw_end - A numeric value in format of datennum(yyyy,mm,dd) indicating the end year for the period across
+%   mhw_end - A numeric value in format of datennum(yyyy,mm,dd) indicating the end date for the period across
 %   which MHW/MCS events are detected.
 %
 %   mhw_peak - A numeric value in format of datennum(yyyy,mm,dd) indicating the date of maximum intensity for the period across
@@ -103,7 +103,7 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %   (m-by-n-by-(datenum(MHW_end,1,1)-datenum(MHW_start)+1)) containing 
 %   spatial intensity of MHW/MCS in each day.
 
-tb = 0;% temporarily for linux as toolbox not available
+%tb = 0;% Forces to use the non-toolbox version. Useful in case of limited number of licenses.
 
 if license('test','Statistics_Toolbox')==0 || tb == 0
     vEvent = 'MHW';
