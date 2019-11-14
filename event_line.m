@@ -43,23 +43,40 @@ function event_line(temp,MHW,mclim,m90,loc,data_start,date_start,date_end,vararg
 %
 %   'Fontsize' - Default is 16. The size of font in plot.
 
-paramNames = {'Event','Color','Alpha','LineWidth','FontSize'};
-defaults   = {'MHW',[1 0.5 0.5],0.5,2,16};
+    vEvent = 'MHW';
+    vColor = [1 0.5 0.5];
+    vAlpha = 0.5;
+    vLineWidth = 2;
+    vFontSize = 16;
+    
+    paramNames = {'vEvent','vColor','vAlpha','vLineWidth','vFontSize'};
+    defaults   = {'MHW',[1 0.5 0.5],0.5,2,16};
 
-[vEvent, vColor,vAlpha,vLineWidth,vFontSize]...
-    = internal.stats.parseArgs(paramNames, defaults, varargin{:});
+    varargin = reshape(varargin,2,length(varargin)/2);
 
-EventNames = {'MHW','MCS'};
-vEvent = internal.stats.getParamVal(vEvent,EventNames,...
-    '''Event''');
+    for i = 1:length(defaults)
+        if any(ismember(varargin(1,:),paramNames{i}))
+           feval(@()assignin('caller',paramNames{i},varargin{2,ismember(varargin(1,:),paramNames{i})}))
+        end      
+    end
+
+% paramNames = {'Event','Color','Alpha','LineWidth','FontSize'};
+% defaults   = {'MHW',[1 0.5 0.5],0.5,2,16};
+% 
+% [vEvent, vColor,vAlpha,vLineWidth,vFontSize]...
+%     = internal.stats.parseArgs(paramNames, defaults, varargin{:});
+% 
+% EventNames = {'MHW','MCS'};
+% vEvent = internal.stats.getParamVal(vEvent,EventNames,...
+%     '''Event''');
 
 
 temp_here=squeeze(temp(loc(1),loc(2),:));
 
 MHW=MHW{:,:};
-MHW=MHW(MHW(:,8)==loc(1) & MHW(:,9)==loc(2),:);
+MHW=MHW(MHW(:,9)==loc(1) & MHW(:,10)==loc(2),:);
 period_plot=datenum(data_start,1,1):1:(datenum(data_start,1,1)+size(temp,3)-1);
-period_mhw=[datenum(num2str(MHW(:,1)),'yyyymmdd') datenum(num2str(MHW(:,2)),'yyyymmdd')];
+period_mhw=[MHW(:,1) MHW(:,2)];
 
 period_plot_v=datevec(period_plot);
 period_unique=datevec(datenum(2016,1,1):datenum(2016,12,31));
@@ -79,7 +96,7 @@ hold on
 switch vEvent
     case 'MHW'
         
-        for i=1:size(MHW,1)
+        for i=1:size(MHW,1);
             MHW_here=period_mhw(i,:);
             x1=(MHW_here(1):MHW_here(2))';
             y1=m90_plot(x1-datenum(data_start,1,1)+1);
@@ -96,7 +113,7 @@ switch vEvent
         
     case 'MCS'
         
-        for i=1:size(MHW,1)
+        for i=1:size(MHW,1);
             MHW_here=period_mhw(i,:);
             x1=(MHW_here(1):MHW_here(2))';
             y1=temp_here(x1-datenum(data_start,1,1)+1);

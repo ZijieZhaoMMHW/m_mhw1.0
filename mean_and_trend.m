@@ -1,4 +1,4 @@
-function [mean_metric,annual_metric,trend_metric,p_metric]=mean_and_trend(MHW,mhw_ts,data_start,varargin)
+function [mean_metric,annual_metric,trend_metric,p_metric]=mean_and_trend(MHW,mhw_ts,data_start,varargin);
 %mean_and_trend - calculating mean states and trends of event metrics
 %  Syntax
 %  [mean_metric,annual_metric,trend_metric,p_metric]=mean_and_trend(MHW,mhw_ts,data_start);
@@ -42,27 +42,39 @@ function [mean_metric,annual_metric,trend_metric,p_metric]=mean_and_trend(MHW,mh
 %
 %   p_metric - A 2D numeric matrix (m-by-n) containing p value of
 %   TREND_METRIC.
+    vMetric = 'Frequency';
+   
+    
+    paramNames = {'vMetric'};
+    defaults   = {'Frequency'};
 
+    varargin = reshape(varargin,2,length(varargin)/2);
 
-paramNames = {'Metric'};
-defaults   = {'Frequency'};
+    for i = 1:length(defaults)
+        if any(ismember(varargin(1,:),paramNames{i}))
+           feval(@()assignin('caller',paramNames{i},varargin{2,ismember(varargin(1,:),paramNames{i})}))
+        end      
+    end
 
-[vMetric]...
-    = internal.stats.parseArgs(paramNames, defaults, varargin{:});
+% paramNames = {'Metric'};
+% defaults   = {'Frequency'};
+% 
+% [vMetric]...
+%     = internal.stats.parseArgs(paramNames, defaults, varargin{:});
+% 
+% MetricNames = {'Frequency','Duration','MaxInt','MeanInt','CumInt','Days'};
+% vMetric = internal.stats.getParamVal(vMetric,MetricNames,...
+%     '''Metric''');
 
-MetricNames = {'Frequency','Duration','MaxInt','MeanInt','CumInt','Days'};
-vMetric = internal.stats.getParamVal(vMetric,MetricNames,...
-    '''Metric''');
-
-[x,y,~]=size(mhw_ts);
+[x,y,t]=size(mhw_ts);
 
 switch vMetric
     case 'Duration'
         
         MHW=MHW{:,:};
-        full_mhw_start=datevec(num2str(MHW(:,1)),'yyyymmdd');
-        full_mhw_end=datevec(num2str(MHW(:,2)),'yyyymmdd');
-        metric=MHW(:,3);
+        full_mhw_start=datevec(MHW(:,1));
+        full_mhw_end=datevec(MHW(:,2));
+        metric=MHW(:,4);
         
         period_used=datenum(data_start,1,1):(datenum(data_start,1,1)+size(mhw_ts,3)-1);
         period_used=datevec(period_used);
@@ -74,28 +86,28 @@ switch vMetric
         p_metric=NaN(x,y);
         annual_metric=NaN(x,y,length(years_mhw));
         
-        loc_full=unique(MHW(:,8:9),'rows');
+        loc_full=unique(MHW(:,9:10),'rows');
         
-        for m=1:size(loc_full)
+        for m=1:size(loc_full);
             loc_here=loc_full(m,:);
-            MHW_here=MHW(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),:);
-            metric_here=metric(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2));
+            MHW_here=MHW(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),:);
+            metric_here=metric(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2));
             
             mean_metric(loc_here(1),loc_here(2))=nanmean(metric_here);
             
-            for i=1:length(years_mhw)
+            for i=1:length(years_mhw);
                 year_here=years_mhw(i);
-                judge_1=(datenum(num2str(MHW_here(:,1)),'yyyymmdd') >= datenum(year_here,1,1)) ...
-                    & (datenum(num2str(MHW_here(:,2)),'yyyymmdd') <= datenum(year_here,12,31));
-                judge_2=((full_mhw_start(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                judge_1=(MHW_here(:,1) >= datenum(year_here,1,1)) ...
+                    & (MHW_here(:,2) <= datenum(year_here,12,31));
+                judge_2=((full_mhw_start(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) >= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here+1,1,1)));
-                judge_3=((full_mhw_end(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                    ((datenum(year_here,12,31)-(MHW_here(:,1))) >= (MHW_here(:,2))-datenum(year_here+1,1,1));
+                judge_3=((full_mhw_end(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here-1,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) <= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here,1,1)));
+                    ((datenum(year_here-1,12,31)-(MHW_here(:,1))) <= (MHW_here(:,2))-datenum(year_here,1,1));
                 metric_judge=metric_here(judge_1 | judge_2 | judge_3);
                 
-                if ~isempty(metric_judge)
+                if ~isempty(metric_judge);
                     metric_judge=nanmean(metric_judge);
                 else
                     metric_judge=nan;
@@ -115,9 +127,9 @@ switch vMetric
     case 'MaxInt'
         
         MHW=MHW{:,:};
-        full_mhw_start=datevec(num2str(MHW(:,1)),'yyyymmdd');
-        full_mhw_end=datevec(num2str(MHW(:,2)),'yyyymmdd');
-        metric=MHW(:,4);
+        full_mhw_start=datevec(MHW(:,1));
+        full_mhw_end=datevec(MHW(:,2));
+        metric=MHW(:,5);
         
         period_used=datenum(data_start,1,1):(datenum(data_start,1,1)+size(mhw_ts,3)-1);
         period_used=datevec(period_used);
@@ -129,28 +141,28 @@ switch vMetric
         p_metric=NaN(x,y);
         annual_metric=NaN(x,y,length(years_mhw));
         
-        loc_full=unique(MHW(:,8:9),'rows');
+        loc_full=unique(MHW(:,9:10),'rows');
         
-        for m=1:size(loc_full)
+        for m=1:size(loc_full);
             loc_here=loc_full(m,:);
-            MHW_here=MHW(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),:);
-            metric_here=metric(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2));
+            MHW_here=MHW(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),:);
+            metric_here=metric(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2));
             
             mean_metric(loc_here(1),loc_here(2))=nanmean(metric_here);
             
-            for i=1:length(years_mhw)
+            for i=1:length(years_mhw);
                 year_here=years_mhw(i);
-                judge_1=(datenum(num2str(MHW_here(:,1)),'yyyymmdd') >= datenum(year_here,1,1)) ...
-                    & (datenum(num2str(MHW_here(:,2)),'yyyymmdd') <= datenum(year_here,12,31));
-                judge_2=((full_mhw_start(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                judge_1=(MHW_here(:,1) >= datenum(year_here,1,1)) ...
+                    & (MHW_here(:,2) <= datenum(year_here,12,31));
+                judge_2=((full_mhw_start(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) >= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here+1,1,1)));
-                judge_3=((full_mhw_end(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                    ((datenum(year_here,12,31)-(MHW_here(:,1))) >= (MHW_here(:,2))-datenum(year_here+1,1,1));
+                judge_3=((full_mhw_end(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here-1,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) <= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here,1,1)));
+                    ((datenum(year_here-1,12,31)-(MHW_here(:,1))) <= (MHW_here(:,2))-datenum(year_here,1,1));
                 metric_judge=metric_here(judge_1 | judge_2 | judge_3);
                 
-                if ~isempty(metric_judge)
+                if ~isempty(metric_judge);
                     metric_judge=nanmean(metric_judge);
                 else
                     metric_judge=nan;
@@ -170,9 +182,9 @@ switch vMetric
     case 'MeanInt'
         
         MHW=MHW{:,:};
-        full_mhw_start=datevec(num2str(MHW(:,1)),'yyyymmdd');
-        full_mhw_end=datevec(num2str(MHW(:,2)),'yyyymmdd');
-        metric=MHW(:,5);
+        full_mhw_start=datevec(MHW(:,1));
+        full_mhw_end=datevec(MHW(:,2));
+        metric=MHW(:,6);
         
         period_used=datenum(data_start,1,1):(datenum(data_start,1,1)+size(mhw_ts,3)-1);
         period_used=datevec(period_used);
@@ -184,28 +196,29 @@ switch vMetric
         p_metric=NaN(x,y);
         annual_metric=NaN(x,y,length(years_mhw));
         
-        loc_full=unique(MHW(:,8:9),'rows');
+        loc_full=unique(MHW(:,9:10),'rows');
         
-        for m=1:size(loc_full)
+        for m=1:size(loc_full);
             loc_here=loc_full(m,:);
-            MHW_here=MHW(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),:);
-            metric_here=metric(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2));
+            MHW_here=MHW(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),:);
+            metric_here=metric(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2));
             
             mean_metric(loc_here(1),loc_here(2))=nanmean(metric_here);
             
-            for i=1:length(years_mhw)
+            for i=1:length(years_mhw);
+                
                 year_here=years_mhw(i);
-                judge_1=(datenum(num2str(MHW_here(:,1)),'yyyymmdd') >= datenum(year_here,1,1)) ...
-                    & (datenum(num2str(MHW_here(:,2)),'yyyymmdd') <= datenum(year_here,12,31));
-                judge_2=((full_mhw_start(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                judge_1=(MHW_here(:,1) >= datenum(year_here,1,1)) ...
+                    & (MHW_here(:,2) <= datenum(year_here,12,31));
+                judge_2=((full_mhw_start(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) >= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here+1,1,1)));
-                judge_3=((full_mhw_end(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                    ((datenum(year_here,12,31)-(MHW_here(:,1))) >= (MHW_here(:,2))-datenum(year_here+1,1,1));
+                judge_3=((full_mhw_end(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here-1,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) <= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here,1,1)));
+                    ((datenum(year_here-1,12,31)-(MHW_here(:,1))) <= (MHW_here(:,2))-datenum(year_here,1,1));
                 metric_judge=metric_here(judge_1 | judge_2 | judge_3);
                 
-                if ~isempty(metric_judge)
+                if ~isempty(metric_judge);
                     metric_judge=nanmean(metric_judge);
                 else
                     metric_judge=nan;
@@ -226,9 +239,9 @@ switch vMetric
     case 'CumInt'
         
         MHW=MHW{:,:};
-        full_mhw_start=datevec(num2str(MHW(:,1)),'yyyymmdd');
-        full_mhw_end=datevec(num2str(MHW(:,2)),'yyyymmdd');
-        metric=MHW(:,7);
+        full_mhw_start=datevec(MHW(:,1));
+        full_mhw_end=datevec(MHW(:,2));
+        metric=MHW(:,8);
         
         period_used=datenum(data_start,1,1):(datenum(data_start,1,1)+size(mhw_ts,3)-1);
         period_used=datevec(period_used);
@@ -240,28 +253,28 @@ switch vMetric
         p_metric=NaN(x,y);
         annual_metric=NaN(x,y,length(years_mhw));
         
-        loc_full=unique(MHW(:,8:9),'rows');
+        loc_full=unique(MHW(:,9:10),'rows');
         
-        for m=1:size(loc_full)
+        for m=1:size(loc_full);
             loc_here=loc_full(m,:);
-            MHW_here=MHW(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),:);
-            metric_here=metric(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2));
+            MHW_here=MHW(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),:);
+            metric_here=metric(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2));
             
             mean_metric(loc_here(1),loc_here(2))=nanmean(metric_here);
             
-            for i=1:length(years_mhw)
+            for i=1:length(years_mhw);
                 year_here=years_mhw(i);
-                judge_1=(datenum(num2str(MHW_here(:,1)),'yyyymmdd') >= datenum(year_here,1,1)) ...
-                    & (datenum(num2str(MHW_here(:,2)),'yyyymmdd') <= datenum(year_here,12,31));
-                judge_2=((full_mhw_start(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                judge_1=(MHW_here(:,1) >= datenum(year_here,1,1)) ...
+                    & (MHW_here(:,2) <= datenum(year_here,12,31));
+                judge_2=((full_mhw_start(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) >= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here+1,1,1)));
-                judge_3=((full_mhw_end(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                    ((datenum(year_here,12,31)-(MHW_here(:,1))) >= (MHW_here(:,2))-datenum(year_here+1,1,1));
+                judge_3=((full_mhw_end(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here-1,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) <= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here,1,1)));
+                    ((datenum(year_here-1,12,31)-(MHW_here(:,1))) <= (MHW_here(:,2))-datenum(year_here,1,1));
                 metric_judge=metric_here(judge_1 | judge_2 | judge_3);
                 
-                if ~isempty(metric_judge)
+                if ~isempty(metric_judge);
                     metric_judge=nanmean(metric_judge);
                 else
                     metric_judge=nan;
@@ -298,12 +311,12 @@ switch vMetric
         p_metric=NaN(x,y);
         annual_metric=NaN(x,y,length(years_mhw));
         
-        loc_full=unique(MHW(:,8:9),'rows');
+        loc_full=unique(MHW(:,9:10),'rows');
         
-        for m=1:size(loc_full)
+        for m=1:size(loc_full);
             loc_here=loc_full(m,:);
             
-            for i=1:length(years_mhw)
+            for i=1:length(years_mhw);
                 year_here=years_mhw(i);
                 mhw_here=squeeze(mhw_ts(loc_here(1),loc_here(2),(datenum(year_here,1,1):datenum(year_here,12,31))-datenum(data_start,1,1)+1));
                 annual_metric(loc_here(1),loc_here(2),i)=nansum(mhw_here~=0 & ~isnan(mhw_here));
@@ -325,8 +338,8 @@ switch vMetric
         
         
         MHW=MHW{:,:};
-        full_mhw_start=datevec(num2str(MHW(:,1)),'yyyymmdd');
-        full_mhw_end=datevec(num2str(MHW(:,2)),'yyyymmdd');
+        full_mhw_start=datevec(MHW(:,1));
+        full_mhw_end=datevec(MHW(:,2));
         
         period_used=datenum(data_start,1,1):(datenum(data_start,1,1)+size(mhw_ts,3)-1);
         period_used=datevec(period_used);
@@ -338,24 +351,24 @@ switch vMetric
         p_metric=NaN(x,y);
         annual_metric=NaN(x,y,length(years_mhw));
         
-        loc_full=unique(MHW(:,8:9),'rows');
+        loc_full=unique(MHW(:,9:10),'rows');
         
-        for m=1:size(loc_full)
+        for m=1:size(loc_full);
             loc_here=loc_full(m,:);
-            MHW_here=MHW(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),:);
+            MHW_here=MHW(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),:);
             
             mean_metric(loc_here(1),loc_here(2))=(size(MHW_here,1)./length(years_mhw));
             
-            for i=1:length(years_mhw)
+            for i=1:length(years_mhw);
                 year_here=years_mhw(i);
                 judge_1=(datenum(num2str(MHW_here(:,1)),'yyyymmdd') >= datenum(year_here,1,1)) ...
                     & (datenum(num2str(MHW_here(:,2)),'yyyymmdd') <= datenum(year_here,12,31));
-                judge_2=((full_mhw_start(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                judge_2=((full_mhw_start(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) >= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here+1,1,1)));
-                judge_3=((full_mhw_end(MHW(:,8)==loc_here(1) & MHW(:,9)==loc_here(2),1)==year_here)) ...
+                    ((datenum(year_here,12,31)-(MHW_here(:,1))) >= (MHW_here(:,2)-datenum(year_here+1,1,1)));
+                judge_3=((full_mhw_end(MHW(:,9)==loc_here(1) & MHW(:,10)==loc_here(2),1)==year_here)) ...
                     & ...
-                    ((datenum(year_here-1,12,31)-datenum(num2str(MHW_here(:,1)),'yyyymmdd')) <= (datenum(num2str(MHW_here(:,2)),'yyyymmdd')-datenum(year_here,1,1)));
+                    ((datenum(year_here-1,12,31)-(MHW_here(:,1))) <= (MHW_here(:,2)-datenum(year_here,1,1)));
                 
                 MHW_judge=MHW_here(judge_1(:) | judge_2(:) | judge_3(:),:);
                 

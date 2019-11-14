@@ -50,6 +50,9 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %   mhw_end - A numeric value in format of datennum(yyyy,mm,dd) indicating the end year for the period across
 %   which MHW/MCS events are detected.
 %
+%   mhw_peak - A numeric value in format of datennum(yyyy,mm,dd) indicating the date of maximum intensity for the period across
+%   which MHW/MCS events are detected.
+%
 %   'Event' - Default is 'MHW'.
 %           - 'MHW' - detecting MHW events.
 %           - 'MCS' - detecting MCS events.
@@ -82,7 +85,8 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %   corresponds to a particular event and each column corresponds to a
 %   metric. Specified metrics are:
 %       - mhw_onset - onset date of each event.
-%       - mhw_end - end date of each event.
+%       - mhw_end - end date of each event. 
+%       - mhw_peak - peak date of each event.
 %       - mhw_dur - duration of each event.
 %       - int_max - maximum intensity of each event.
 %       - int_mean - mean intensity of each event.
@@ -99,38 +103,47 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %   (m-by-n-by-(datenum(MHW_end,1,1)-datenum(MHW_start)+1)) containing 
 %   spatial intensity of MHW/MCS in each day.
 
+tb = 0;% temporarily for linux as toolbox not available
 
-% vEvent = 'MHW';
-% vThreshold = 0.9;
-% vWindowHalfWidth = 5;
-% vsmoothPercentileWidth = 31;
-% vminDuration = 5;
-% vmaxGap = 2;
-% ClimTemp = temp;
-% ClimTime = time;
-% 
-paramNames = {'Event','Threshold','WindowHalfWidth','smoothPercentileWidth','minDuration',...
-    'maxGap','ClimTemp','ClimTime','percentile'};
-defaults   = {'MHW',0.9,5,31,5,2,temp,time,'matlab'};
-% 
-% varargin = reshape(varargin,2,length(varargin)/2);
-% 
-% for i = 1:length(defaults)
-%     if any(ismember(varargin(1,:),paramNames{i}))
-%        feval(@()assignin('caller',paramNames{i},varargin{2,ismember(varargin(1,:),paramNames{i})}))
-%     end      
-% end
+if license('test','Statistics_Toolbox')==0 || tb == 0
+    vEvent = 'MHW';
+    vThreshold = 0.9;
+    vWindowHalfWidth = 5;
+    vsmoothPercentileWidth = 31;
+    vminDuration = 5;
+    vmaxGap = 2;
+    ClimTemp = temp;
+    ClimTime = time;
+    vpercentile = 'python';%Because matlab version of percentile needs toolbox
+    
+    paramNames = {'vEvent','vThreshold','vWindowHalfWidth','vsmoothPercentileWidth','vminDuration',...
+    'vmaxGap','ClimTemp','ClimTime','vpercentile'};
+    defaults   = {'MHW',0.9,5,31,5,2,temp,time,'python'};
+
+    varargin = reshape(varargin,2,length(varargin)/2);
+
+    for i = 1:length(defaults)
+        if any(ismember(varargin(1,:),paramNames{i}))
+           feval(@()assignin('caller',paramNames{i},varargin{2,ismember(varargin(1,:),paramNames{i})}))
+        end      
+    end
+
+else
+    paramNames = {'vEvent','vThreshold','vWindowHalfWidth','vsmoothPercentileWidth','vminDuration',...
+        'vmaxGap','vClimTemp','vClimTime','vpercentile'};
+        defaults   = {'MHW',0.9,5,31,5,2,temp,time,'matlab'};
 
 
-[vEvent, vThreshold,vWindowHalfWidth,vsmoothPercentileWidth,vminDuration,vmaxGap,ClimTemp,ClimTime,vpercentile]...
-    = internal.stats.parseArgs(paramNames, defaults, varargin{:});
+    [vEvent, vThreshold,vWindowHalfWidth,vsmoothPercentileWidth,vminDuration,vmaxGap,ClimTemp,ClimTime,vpercentile]...
+        = internal.stats.parseArgs(paramNames, defaults, varargin{:});
 
-EventNames = {'MHW','MCS'};
-vEvent = internal.stats.getParamVal(vEvent,EventNames,...
-    '''Event''');
-PercentileNames={'matlab','python'};
-vpercentile=internal.stats.getParamVal(vpercentile,PercentileNames,...
-    '''matlab''');
+    EventNames = {'MHW','MCS'};
+    vEvent = internal.stats.getParamVal(vEvent,EventNames,...
+        '''Event''');
+    PercentileNames={'matlab','python'};
+    vpercentile=internal.stats.getParamVal(vpercentile,PercentileNames,...
+        '''matlab''');
+end
 
 %%  "What if cli_start-window or cli_end+window exceeds the time range of data"
 
@@ -138,7 +151,7 @@ ahead_date=time(1)-(cli_start-vWindowHalfWidth);
 after_date=cli_end+vWindowHalfWidth-time(end);
 temp_clim=ClimTemp(:,:,ClimTime>=cli_start-vWindowHalfWidth & ClimTime<=cli_end+vWindowHalfWidth);
 
-if ahead_date>0 && after_date>0
+if ahead_date> 0 && after_date>0
     temp_clim=cat(3,NaN(size(temp_clim,1),size(temp_clim,2),ahead_date), ...
     temp_clim,NaN(size(temp_clim,1),size(temp_clim,2),after_date));
 elseif ahead_date>0 && after_date<=0
@@ -176,7 +189,9 @@ for i=1:366
     data_thre=num2cell(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3);
     switch vpercentile
         case 'matlab'
-            m90(:,:,i) = quantile(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),vThreshold,3);
+             % find out that the quantile function has an issue with singleton dimensions..
+             %m90(:,:,i) = quantile(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),vThreshold,3);
+            m90(:,:,i) = quantile(squeeze(permute(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),[3 1 2])),vThreshold);% for singleton dimensions
             mclim(:,:,i) = mean(temp_clim(:,:,any(ind_fake'>=(ind_fake(fake_doy == i)-vWindowHalfWidth) & ind_fake' <= (ind_fake(fake_doy ==i)+vWindowHalfWidth),2)),3,'omitnan');
             
         case 'python'
@@ -207,7 +222,7 @@ date_mhw=datevec(mhw_start:mhw_end);
 date_mhw(:,1)=2000;
 indextocal = day(datetime(date_mhw),'dayofyear');
 
-ts=str2double(string(datestr(mhw_start:mhw_end,'YYYYmmdd')));
+ts= mhw_start:mhw_end;
 
 mhw_ts=zeros(x_size,y_size,length(ts));
 
@@ -271,7 +286,8 @@ switch vEvent
                             end
                             
                             mhwstart=NaN(size(potential_event,1),1);
-                            mhwend=NaN(size(potential_event,1),1);
+                            mhwend=NaN(size(potential_event,1),1); 
+                            mhwpeak=NaN(size(potential_event,1),1);
                             mduration=NaN(size(potential_event,1),1);
                             mhwint_max=NaN(size(potential_event,1),1);
                             mhwint_mean=NaN(size(potential_event,1),1);
@@ -287,8 +303,8 @@ switch vEvent
                                 manom=mrow-mcl;
                                 mhw_ts(i,j,event_here(1):event_here(2))=manom;
                                 
-                                [maxanom,~]=nanmax(squeeze(manom));
-                                
+                                [maxanom,ind]= max(squeeze(manom),[],'omitnan'); % changed so it doesn't require Stats toobox
+                                mhwpeak(le) = ts(event_here(1))+ind-1;
                                 mhwint_max(le)=...
                                     maxanom;
                                 mhwint_mean(le)=...
@@ -301,7 +317,7 @@ switch vEvent
                                 mhwend(le)=endtime;
                                 mduration(le)=event_here(2)-event_here(1)+1;
                             end
-                            MHW=[MHW;[mhwstart mhwend mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
+                            MHW=[MHW;[mhwstart mhwend mhwpeak mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
                         end
                     end
                 end
@@ -365,6 +381,7 @@ switch vEvent
                             
                             mhwstart=NaN(size(potential_event,1),1);
                             mhwend=NaN(size(potential_event,1),1);
+                            mhwpeak=NaN(size(potential_event,1),1);
                             mduration=NaN(size(potential_event,1),1);
                             mhwint_max=NaN(size(potential_event,1),1);
                             mhwint_mean=NaN(size(potential_event,1),1);
@@ -380,8 +397,8 @@ switch vEvent
                                 manom=mrow-mcl;
                                 mhw_ts(i,j,event_here(1):event_here(2))=manom;
                                 
-                                [maxanom,~]=nanmin(squeeze(manom));
-                                
+                                [maxanom,ind]=min(squeeze(manom),[],'omitnan');
+                                mhwpeak(le) = ts(event_here(1))+ind-1;
                                 mhwint_max(le)=...
                                     maxanom;
                                 mhwint_mean(le)=...
@@ -395,7 +412,7 @@ switch vEvent
                                 mduration(le)=event_here(2)-event_here(1)+1;
                             end
                             
-                            MHW=[MHW;[mhwstart mhwend mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
+                            MHW=[MHW;[mhwstart mhwend mhwpeak mduration mhwint_max mhwint_mean mhwint_var mhwint_cum repmat(i,size(mhwstart,1),1) repmat(j,size(mhwstart,1),1)]];
                             
                         end
                     end
@@ -409,14 +426,21 @@ switch vEvent
         end
 end
 
-MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),...
-    'variablenames',{'mhw_onset','mhw_end','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
-
+if ~isempty(MHW)
+    MHW=table(MHW(:,1),MHW(:,2),MHW(:,3),MHW(:,4),MHW(:,5),MHW(:,6),MHW(:,7),MHW(:,8),MHW(:,9),MHW(:,10),...
+    'variablenames',{'mhw_onset','mhw_end','mhw_peak','mhw_dur','int_max','int_mean','int_var','int_cum','xloc','yloc'});
+else
+    disp('No MHWs detected');
+end
 function p=percentile(data,thre)
-if nansum(isnan(data))~=length(data)
-    data=data(~isnan(data));
+if sum(isnan(squeeze(data)),'omitnan')~=length(data)% added squeeze to work with singleton dimensions
+    data=data(~isnan(data));% getting rid of NaNs will overestimate the threshold suggest changing it to the median
+    % Also, if for a reason there is a grid point in the dataset with only
+    % NaNs, this will create an error
     pos=1+(length(data)-1)*thre;
-    p=interp1((1:length(data))',sort(data(:)),pos);
+    p=interp1((1:length(data))',sort(data(:)),pos); %linear interpolation
 else
     p=nan;
 end
+
+
