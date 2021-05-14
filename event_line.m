@@ -74,7 +74,7 @@ m90_plot=squeeze(m90(loc(1),loc(2),loc_plot));
 
 h1=plot(period_plot,mclim_plot,'b','linewidth',vLineWidth);
 hold on
-h2=plot(period_plot,m90_plot,'g','linewidth',vLineWidth);
+h2=plot(period_plot,m90_plot,'c','linewidth',vLineWidth);
 hold on
 h3=plot(period_plot,temp_here,'k','linewidth',vLineWidth);
 hold on
@@ -126,8 +126,9 @@ ylabel('^{o}C','fontsize',16);
 set(gca,'fontsize',vFontSize);
 
 grid on
-    
-datetick('x','dd/mm/yy','keeplimits','keepticks');
+
+datetick('x')
+end
 
 
 
