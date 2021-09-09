@@ -8,13 +8,13 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %
 %  Description
 %
-%  [MHW]=detect(temp,time,cli_start,cli_end,mhw_start,mhw_end) returns
-%  all detected MHW events for the m-by-n-by-t matrix TEMP starting in the
-%  year DATA_START. m, n and t separately indicate two spatial dimensions
-%  (m and n) and one temporal dimension (t). Climatologies used to
-%  determine events are calculated based on TEMP from CLI_START to
-%  CLI_END. MHW is a table where each row corresponds to a particular
-%  event during MHW_START to MHW_END and each column indicates a metric.
+%  [MHW]=detect(temp,time,cli_start,cli_end,mhw_start,mhw_end) returns all
+%  detected MHW events for the m-by-n-by-t matrix TEMP. m, n and t
+%  separately indicate two spatial dimensions (m and n) and one temporal
+%  dimension (t). Climatologies used to determine events are calculated
+%  based on TEMP from CLI_START to CLI_END. MHW is a table where each row
+%  corresponds to a particular event during MHW_START to MHW_END and each
+%  column indicates a metric.
 %
 %  [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw_end)
 %  also return the spatial climatology MCLIM (m-by-n-by-366) and threshold
@@ -40,9 +40,6 @@ function [MHW,mclim,m90,mhw_ts]=detect(temp,time,cli_start,cli_end,mhw_start,mhw
 %
 %   cli_end - A numeric value in format of datennum(yyyy,mm,dd) indicating the end year for the period across
 %   which the spatial climatology and threshold are calculated. 
-%
-%   data_start - A numeric value in format of datennum(yyyy,mm,dd) indicating the start year of your input
-%   data TEMP.
 %
 %   mhw_start - A numeric value in format of datennum(yyyy,mm,dd) indicating the start year for the period
 %   across which MHW/MCS events are detected. 
