@@ -116,138 +116,30 @@ See if we could plot them. Note that here we actually show the decadal trend ins
 
 figure('pos',[10 10 1500 1500]);
 
+for i=1:6;
+    subplot(2,6,i);
+    eval(['mean_here=mean_' metric_used{i} ';']);
+    eval(['t_here=trend_' metric_used{i} ';']);
+    m_pcolor(lon_used,lat_used,mean_here');
+    shading interp
+    m_coast('patch',[0.7 0.7 0.7]);
+    m_grid;
+    colormap(jet);
+    s=colorbar('location','southoutside');
+    title(metric_used{i},'fontname','consolas','fontsize',12);
+    
+    subplot(2,6,i+6);
+    eval(['mean_here=mean_' metric_used{i} ';']);
+    eval(['t_here=trend_' metric_used{i} ';']);
+    m_pcolor(lon_used,lat_used,t_here');
+    shading interp
+    m_coast('patch',[0.7 0.7 0.7]);
+    m_grid;
+    colormap(jet);
+    s=colorbar('location','southoutside');
+    title(['Trend-' metric_used{i}],'fontname','consolas','fontsize',12);
+end
 
-subplot(2,6,1);
-m_contourf(lon_used,lat_used,mean_Frequency',2:0.1:5,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-colormap(jet);
-s=colorbar('location','southoutside');
-m_text(148,-44,'a) Frequency','fontweight','bold','fontsize',14);
-
-subplot(2,6,2);
-m_contourf(lon_used,lat_used,mean_MeanInt',1:0.1:2.5,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-colormap(jet);
-m_text(148,-44,'b) MeanInt','fontweight','bold','fontsize',14);
-s=colorbar('location','southoutside');
-
-subplot(2,6,3);
-m_contourf(lon_used,lat_used,mean_MaxInt',1:0.1:3,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-colormap(jet);
-m_text(148,-44,'c) MaxInt','fontweight','bold','fontsize',14);
-s=colorbar('location','southoutside');
-
-subplot(2,6,4);
-m_contourf(lon_used,lat_used,mean_CumInt',15:0.1:50,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-colormap(jet);
-m_text(148,-44,'d) CumInt','fontweight','bold','fontsize',14);
-s=colorbar('location','southoutside');
-
-subplot(2,6,5);
-m_contourf(lon_used,lat_used,mean_Duration',9:0.1:27,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-colormap(jet);
-m_text(148,-44,'e) Duration','fontweight','bold','fontsize',14);
-s=colorbar('location','southoutside');
-
-subplot(2,6,6);
-m_contourf(lon_used,lat_used,mean_Days',26:0.1:72,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-colormap(jet);
-m_text(148,-44,'f) Days','fontweight','bold','fontsize',14);
-s=colorbar('location','southoutside');
-
-subplot(2,6,7);
-m_contourf(lon_used,lat_used,(trend_Frequency')*10,0.5:0.05:3.5,'linestyle','none');
-s=colorbar('location','southoutside');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-[lon,lat]=meshgrid(lon_used,lat_used);
-lon=lon';
-lat=lat';
-hold on
-m_scatter(lon(p_Frequency<0.05),lat(p_Frequency<0.05),1.5,'k');
-colormap(jet);
-m_text(148,-44,'g) t-Frequency','fontweight','bold','fontsize',14);
-
-subplot(2,6,8);
-m_contourf(lon_used,lat_used,(trend_MeanInt')*10,-0.4:0.05:0.4,'linestyle','none');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-s=colorbar('location','southoutside');
-[lon,lat]=meshgrid(lon_used,lat_used);
-lon=lon';
-lat=lat';
-hold on
-m_scatter(lon(p_MeanInt<0.05),lat(p_MeanInt<0.05),1.5,'k');
-colormap(jet);
-caxis([-0.4 0.4]);
-m_text(148,-44,'h) t-MeanInt','fontweight','bold','fontsize',14);
-
-subplot(2,6,9);
-m_contourf(lon_used,lat_used,(trend_MaxInt')*10,-0.4:0.05:0.4,'linestyle','none');
-s=colorbar('location','southoutside');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-[lon,lat]=meshgrid(lon_used,lat_used);
-lon=lon';
-lat=lat';
-hold on
-m_scatter(lon(p_MaxInt<0.05),lat(p_MaxInt<0.05),1.5,'k');
-colormap(jet);
-caxis([-0.4 0.4]);
-m_text(148,-44,'i) t-MaxInt','fontweight','bold','fontsize',14);
-
-subplot(2,6,10);
-m_contourf(lon_used,lat_used,(trend_CumInt')*10,-0.4:0.1:110,'linestyle','none');
-s=colorbar('location','southoutside');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-[lon,lat]=meshgrid(lon_used,lat_used);
-lon=lon';
-lat=lat';
-hold on
-m_scatter(lon(p_CumInt<0.05),lat(p_CumInt<0.05),1.5,'k');
-colormap(jet);
-caxis([0 110]);
-m_text(148,-44,'j) t-CumInt','fontweight','bold','fontsize',14);
-
-
-subplot(2,6,11);
-m_contourf(lon_used,lat_used,(trend_Duration')*10,-3:0.1:42,'linestyle','none');
-s=colorbar('location','southoutside');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-[lon,lat]=meshgrid(lon_used,lat_used);
-lon=lon';
-lat=lat';
-hold on
-m_scatter(lon(p_Duration<0.05),lat(p_Duration<0.05),1.5,'k');
-colormap(jet);
-caxis([0 40]);
-m_text(148,-44,'k) t-Duration','fontweight','bold','fontsize',14);
-
-subplot(2,6,12);
-m_contourf(lon_used,lat_used,(trend_Days')*10,0:0.1:75,'linestyle','none');
-s=colorbar('location','southoutside');
-m_gshhs_h('patch',[1 1 1]);
-m_grid;
-[lon,lat]=meshgrid(lon_used,lat_used);
-lon=lon';
-lat=lat';
-hold on
-m_scatter(lon(p_Days<0.05),lat(p_Days<0.05),1.5,'k');
-colormap(jet);
-caxis([0 74]);
-m_text(148,-44,'l) t-Days','fontweight','bold','fontsize',14);
 
 ```
 ![Image text](https://github.com/ZijieZhao/see/blob/master/store_figure/mean_and_trend.png)
