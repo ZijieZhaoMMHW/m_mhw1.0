@@ -142,7 +142,7 @@ end
 
 
 ```
-![Image text](https://github.com/ZijieZhao/see/blob/master/store_figure/mean_and_trend.png)
+![Image text](https://github.com/ZijieZhaoMMHW/m_mhw1.0/master/store_figure/mean_and_trend.png)
 
 We could see that, as a globally recongized hotspot, oceanic region in eastern Tasmania exhibits significantly increasing MHW metrics in most regions.
 
