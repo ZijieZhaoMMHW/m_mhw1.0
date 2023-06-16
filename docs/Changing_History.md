@@ -14,6 +14,6 @@ Rewrite the `mean_and_trend` function, making it much faster.
 Rewrite the example for better interpretation. 
 
 Ongoing changes:
->Enabling different algorithms to detect MHWs.
->Writing more examples, including seasonality of MHWs, analysis of MHW category, and more advanced MHW analysis such as EOF and basic machine learning methods.
->Writing the algorithm to detect spatiotemporal MHWs, such as results in Sun et al. (2023) and Bonino et al. (2023).
+Enabling different algorithms to detect MHWs.
+Writing more examples, including seasonality of MHWs, analysis of MHW category, and more advanced MHW analysis such as EOF and basic machine learning methods.
+Writing the algorithm to detect spatiotemporal MHWs, such as results in Sun et al. (2023) and Bonino et al. (2023).
