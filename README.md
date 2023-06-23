@@ -189,7 +189,13 @@ For information of other functions, please see `help` text via MATLAB. For pract
 Example
 ----------
 
-We provide an [example](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/an_example.md) about how to use functions in **`m_mhw`** and how to apply them to real-world data. Its associated code could be found [here](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/testing/an_example.m).
+We provide [examples](https://github.com/ZijieZhaoMMHW/m_mhw1.0/tree/master/examples) about how to use functions in **`m_mhw`** and how to apply them to real-world data. 
+
+Current examples include:
+
+[An example about how to apply m_mhw to real-world data](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/an_example.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/an_example.m)
+
+[Analysing seasonality and monthly variability of MHWs](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/seasonality.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/seasonality.m)
 
 Issues
 --------------------
