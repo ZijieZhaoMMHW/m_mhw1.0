@@ -19,3 +19,7 @@ Writing the algorithm to detect spatiotemporal MHWs, such as results in Sun et a
 2023-6-23
 -------------
 Adding a new example about analysis of seasonality and monthly variability of MHWs.
+
+2023-6-27
+-------------
+Adding a new example about EOF analysis on MHW metrics.
