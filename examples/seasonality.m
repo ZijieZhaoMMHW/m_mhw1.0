@@ -41,8 +41,8 @@ mhwday_month=NaN(size(mhw_ts,1),size(mhw_ts,2),12); % lon-lat-month
 mhwint_month=NaN(size(mhw_ts,1),size(mhw_ts,2),12); % lon-lat-month
 for i=1:12
     index_used=date_used(:,2)==i;
-    mhwday_month(:,:,i)=nansum(~isnan(mhw_ts(:,:,index_used)),3)./(2016-1993+1);
-    mhwint_month(:,:,i)=nanmean(mhw_ts(:,:,index_used),3);
+    mhwday_month(:,:,i)=sum(~isnan(mhw_ts(:,:,index_used)),3,'omitnan')./(2016-1993+1);
+    mhwint_month(:,:,i)=mean(mhw_ts(:,:,index_used),3,'omitnan');
 end
 mhwday_month(repmat(land_index,1,1,12))=nan;
 % mhwday_month is the average number of MHW days in each month during
@@ -61,8 +61,8 @@ mhwday_seas=NaN(size(mhw_ts,1),size(mhw_ts,2),4); % lon-lat-seasons
 mhwint_seas=NaN(size(mhw_ts,1),size(mhw_ts,2),4); % lon-lat-seasons
 for i=1:4
     index_used=ismember(date_used(:,2),seas(i,:));
-    mhwday_seas(:,:,i)=nansum(~isnan(mhw_ts(:,:,index_used)),3)./(3*(2016-1993+1));
-    mhwint_seas(:,:,i)=nanmean(mhw_ts(:,:,index_used),3);
+    mhwday_seas(:,:,i)=sum(~isnan(mhw_ts(:,:,index_used)),3,'omitnan')./(3*(2016-1993+1));
+    mhwint_seas(:,:,i)=mean(mhw_ts(:,:,index_used),3,'omitnan');
 end
 mhwday_seas(repmat(land_index,1,1,4))=nan;
 % mhwday_seas (days/month) is the average number of MHW days in each season during
