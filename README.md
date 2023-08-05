@@ -199,6 +199,9 @@ Current examples include:
 
 [EOF analysis on annual MHW days](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhweof.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhweof.m)
 
+[MHW Category Analysis](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/category_analysis.md) [(Codes)]
+(https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/category_analysis.m)
+
 Issues
 --------------------
 
