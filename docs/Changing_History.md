@@ -23,3 +23,7 @@ Adding a new example about analysis of seasonality and monthly variability of MH
 2023-6-27
 -------------
 Adding a new example about EOF analysis on MHW metrics.
+
+2023-8-5
+-------------
+Adding a new example about MHW category analysis.
