@@ -201,6 +201,8 @@ Current examples include:
 
 [MHW Category Analysis](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/category_analysis.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/category_analysis.m)
 
+[EOF analysis on annual MHW cumulative intensity](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhweof_int.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhweof_int.m)
+
 Issues
 --------------------
 
