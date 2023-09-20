@@ -27,3 +27,7 @@ Adding a new example about EOF analysis on MHW metrics.
 2023-8-5
 -------------
 Adding a new example about MHW category analysis.
+
+2023-9-20
+-------------
+Adding a new example about EOF analysis on MHW cumulative intensity.
