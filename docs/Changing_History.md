@@ -31,3 +31,7 @@ Adding a new example about MHW category analysis.
 2023-9-20
 -------------
 Adding a new example about EOF analysis on MHW cumulative intensity.
+
+2023-12-1
+-------------
+Fixing a small error in the function `detect`
