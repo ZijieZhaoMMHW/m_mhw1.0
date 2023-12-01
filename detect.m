@@ -138,8 +138,8 @@ vpercentile=internal.stats.getParamVal(vpercentile,PercentileNames,...
 
 %%  "What if cli_start-window or cli_end+window exceeds the time range of data"
 
-ahead_date=time(1)-(cli_start-vWindowHalfWidth);
-after_date=cli_end+vWindowHalfWidth-time(end);
+ahead_date=ClimTime(1)-(cli_start-vWindowHalfWidth);
+after_date=cli_end+vWindowHalfWidth-ClimTime(end);
 temp_clim=ClimTemp(:,:,ClimTime>=cli_start-vWindowHalfWidth & ClimTime<=cli_end+vWindowHalfWidth);
 
 if ahead_date>0 && after_date>0
