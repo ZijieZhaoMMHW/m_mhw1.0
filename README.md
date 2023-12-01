@@ -207,6 +207,8 @@ Current examples include:
 
 [EOF analysis on annual MHW cumulative intensity](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhweof_int.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhweof_int.m)
 
+[Comparison for the efficiency biases between `detect` and `detectc`](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhw_efficiency.md) [(Codes)](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/examples/mhw_efficiency.m)
+
 Issues
 --------------------
 
