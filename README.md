@@ -37,6 +37,10 @@ Functions
 <td><code>detect()</code></td>
 <td>The main function, aiming to detect spatial MHW/MCS events following definition given by Hobday et al. (2016). </td>
 </tr>
+<tr class="odd">
+<td><code>detectc()</code></td>
+<td>Similar to `detect` but it stores the MHW output in cell format, resulting in faster computation. See an example for the comparison between detect and detectc. </td>
+</tr>
 <tr class="even">
 <td><code>event_line()</code></td>
 <td>The function to create a line plot of MHW/MCS in a particular grid during a particular period.</td>
