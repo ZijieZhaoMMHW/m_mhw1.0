@@ -221,6 +221,11 @@ To contribute to the package please follow the guidelines [here](https://github.
 
 Please use this [link](https://github.com/ZijieZhaoMMHW/m_mhw1.0/issues) to report any bugs found.
 
+Citation
+----------
+If you use this toolbox, please cite the paper:
+Zhao, Z., & Marin, M. (2019). A MATLAB toolbox to detect and analyze marine heatwaves. Journal of Open Source Software, 4(33), 1124.
+
 References
 ----------
 
