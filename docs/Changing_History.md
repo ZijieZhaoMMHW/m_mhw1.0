@@ -35,3 +35,7 @@ Adding a new example about EOF analysis on MHW cumulative intensity.
 2023-12-1
 -------------
 Fixing a small error in the function `detect`
+
+2024-10-17
+-------------
+Fixing a small error in the function `mean_and_trend`
