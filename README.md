@@ -225,6 +225,11 @@ If you use this toolbox, please cite the paper:
 
 Zhao, Z., & Marin, M. (2019). A MATLAB toolbox to detect and analyze marine heatwaves. Journal of Open Source Software, 4(33), 1124.
 
+Spoiler
+----------
+Currently working on an extension of this toolbox focusing on spatiotemporal trackings of MHWs. You can get a bit favour on it here now.
+![MHW Morphological](https://github.com/ZijieZhaoMMHW/MHW_tracking/blob/main/mhwvsmhw_dist7.gif)
+
 References
 ----------
 
