@@ -228,7 +228,7 @@ Zhao, Z., & Marin, M. (2019). A MATLAB toolbox to detect and analyze marine heat
 Spoiler
 ----------
 Currently working on an extension of this toolbox focusing on spatiotemporal trackings of MHWs. You can get a bit favour on it here now.
-![MHW Morphological](https://github.com/ZijieZhaoMMHW/MHW_tracking/blob/main/mhwvsmhw_dist7.gif)
+![MHW Morphological](https://github.com/ZijieZhaoMMHW/m_mhw1.0/blob/master/store_figure/tasmansea_example.gif)
 
 References
 ----------
