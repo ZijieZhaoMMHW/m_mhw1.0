@@ -45,7 +45,7 @@ Functions
 </tr>
 <tr class="odd">
 <td><code>mean_and_trend()</code></td>
-<td>The function to calculate spatial mean states and annual trends of MHW/MCS properties. </td>
+<td>The function to calculate spatial mean states and annual trends of MHW/MCS properties (**not recommended now as there are many ways to calculate MHW metrics**). </td>
 </tr>
 <tr class="even">
 <td><code>composites()</code></td>
